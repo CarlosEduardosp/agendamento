@@ -56,7 +56,7 @@ class InserirCliente(InterfaceClienteRepository):
 
             connection.commit()
 
-            response = cursor.fetchone()
+            response = cursor.fetchall()
 
             # fechando conexão com banco.
             fechar_conexao_db(cursor=cursor, connection=connection)
