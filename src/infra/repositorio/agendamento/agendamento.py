@@ -1,6 +1,7 @@
 from src.infra.configs.connection.connection_db import conectar_db
 from src.infra.configs.connection.fechar_conexao import fechar_conexao_db
 from src.interfaces.interface_repositorio.interface_agendamento import InterfaceAgendamentoRepository
+from psycopg2.extras import DictCursor
 
 
 class Inseriragendamento(InterfaceAgendamentoRepository):
@@ -8,10 +9,11 @@ class Inseriragendamento(InterfaceAgendamentoRepository):
     def criar_agendamento(self, id_servico, data, horario, id_cliente):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
         # criando um cursor
-        cursor = connection.cursor()
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         cursor.execute(f"INSERT INTO agendamento(id_servico, data, horario, id_cliente)"
                        f"VALUES('{id_servico}', '{data}', '{horario}', '{id_cliente}')")
@@ -19,7 +21,7 @@ class Inseriragendamento(InterfaceAgendamentoRepository):
         connection.commit()
 
         # fechando conexão com banco.
-        fechar_conexao_db(cursor=cursor, connection=connection)
+        fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
         return 'Agendamento Inserido com sucesso'
 
@@ -27,9 +29,11 @@ class Inseriragendamento(InterfaceAgendamentoRepository):
     def listar_agendamentos(self):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
-        cursor = connection.cursor()
+        # criando um cursor
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         cursor.execute(f"SELECT * FROM agendamento;")
 
@@ -38,16 +42,18 @@ class Inseriragendamento(InterfaceAgendamentoRepository):
         response = cursor.fetchall()
 
         # fechando conexão com banco.
-        fechar_conexao_db(cursor=cursor, connection=connection)
+        fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
         return response
 
     def encontrar_agendamento_por_id_by_cliente(self, id_cliente):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
-        cursor = connection.cursor()
+        # criando um cursor
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         try:
             cursor.execute(f"SELECT * FROM agendamento WHERE id_cliente = {id_cliente};")
@@ -57,7 +63,7 @@ class Inseriragendamento(InterfaceAgendamentoRepository):
             response = cursor.fetchall()
 
             # fechando conexão com banco.
-            fechar_conexao_db(cursor=cursor, connection=connection)
+            fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
             return response
 
@@ -68,16 +74,18 @@ class Inseriragendamento(InterfaceAgendamentoRepository):
     def deletar_agendamento(self, id_agendamento):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
-        cursor = connection.cursor()
+        # criando um cursor
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         try:
             cursor.execute(f"DELETE FROM agendamento WHERE id_agendamento = {id_agendamento}")
             connection.commit()
 
             # fechando conexão com banco.
-            fechar_conexao_db(cursor=cursor, connection=connection)
+            fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
             return "Agendamento deletado com sucesso"
 

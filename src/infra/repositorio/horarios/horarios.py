@@ -1,16 +1,20 @@
 from src.infra.configs.connection.connection_db import conectar_db
 from src.infra.configs.connection.fechar_conexao import fechar_conexao_db
 from src.interfaces.interface_repositorio.interface_horarios import InterfacehorariosRepository
+from psycopg2.extras import DictCursor
+import psycopg2
+
 
 class InserirHorario(InterfacehorariosRepository):
 
     def criar_horarios(self, horario, status):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
         # criando um cursor
-        cursor = connection.cursor()
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         cursor.execute(f"INSERT INTO horarios(horario, status)"
                        f"VALUES('{horario}', '{status}')")
@@ -18,17 +22,18 @@ class InserirHorario(InterfacehorariosRepository):
         connection.commit()
 
         # fechando conexão com banco.
-        fechar_conexao_db(cursor=cursor, connection=connection)
+        fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
         return 'Horário Inserido com sucesso'
-
 
     def listar_horarios(self):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
-        cursor = connection.cursor()
+        # criando um cursor
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         cursor.execute(f"SELECT * FROM horarios;")
 
@@ -37,16 +42,18 @@ class InserirHorario(InterfacehorariosRepository):
         response = cursor.fetchall()
 
         # fechando conexão com banco.
-        fechar_conexao_db(cursor=cursor, connection=connection)
+        fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
         return response
 
     def encontrar_horarios_por_id(self, id_horario):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
-        cursor = connection.cursor()
+        # criando um cursor
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         try:
             cursor.execute(f"SELECT * FROM horarios WHERE id_horario = {id_horario};")
@@ -56,20 +63,21 @@ class InserirHorario(InterfacehorariosRepository):
             response = cursor.fetchall()
 
             # fechando conexão com banco.
-            fechar_conexao_db(cursor=cursor, connection=connection)
+            fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
             return response
 
         except:
             return 'Ocorreu um erro ao selecionar horario.'
 
-
     def encontrar_horarios_por_status(self, status):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
-        cursor = connection.cursor()
+        # criando um cursor
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         try:
             cursor.execute(f"SELECT * FROM horarios WHERE status = {status};")
@@ -79,7 +87,7 @@ class InserirHorario(InterfacehorariosRepository):
             response = cursor.fetchall()
 
             # fechando conexão com banco.
-            fechar_conexao_db(cursor=cursor, connection=connection)
+            fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
             return response
 
@@ -90,16 +98,18 @@ class InserirHorario(InterfacehorariosRepository):
     def deletar_horarios(self, id_horario):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
-        cursor = connection.cursor()
+        # criando um cursor
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         try:
             cursor.execute(f"DELETE FROM horarios WHERE id_horario = {id_horario}")
             connection.commit()
 
             # fechando conexão com banco.
-            fechar_conexao_db(cursor=cursor, connection=connection)
+            fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
             return "horario deletado com sucesso"
 

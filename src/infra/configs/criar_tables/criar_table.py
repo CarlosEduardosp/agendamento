@@ -5,14 +5,18 @@ from ..entidades.horarios_disponiveis import create_horarios_disponiveis_table_q
 from ..connection.connection_db import conectar_db
 from ..connection.fechar_conexao import fechar_conexao_db
 import psycopg2
+from psycopg2.extras import DictCursor
 
 
 def create_table():
     """Cria as tabelas no banco de dados."""
 
-    connection = conectar_db()
+    # conectando ao banco
+    conn = conectar_db()
+    connection = conn['connection']
 
-    cursor = connection.cursor()
+    # criando um cursor
+    cursor = connection.cursor(cursor_factory=DictCursor)
 
     try:
 
@@ -29,7 +33,7 @@ def create_table():
     except psycopg2.Error as e:
         print(f"Erro ao criar as tabelas: {e}")
 
-    # fechando conexão com banco.
-    fechar_conexao_db(cursor=cursor, connection=connection)
+        # fechando conexão com banco.
+        fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
 

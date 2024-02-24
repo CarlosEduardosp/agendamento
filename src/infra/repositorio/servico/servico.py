@@ -1,6 +1,7 @@
 from src.infra.configs.connection.connection_db import conectar_db
 from src.infra.configs.connection.fechar_conexao import fechar_conexao_db
 from src.interfaces.interface_repositorio.interface_servico import InterfaceServicoRepository
+from psycopg2.extras import DictCursor
 
 
 class InserirServico(InterfaceServicoRepository):
@@ -8,10 +9,11 @@ class InserirServico(InterfaceServicoRepository):
     def criar_servico(self, nome_servico, descricao_servico):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
         # criando um cursor
-        cursor = connection.cursor()
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         cursor.execute(f"INSERT INTO servico(nome_servico, descricao_servico)"
                        f"VALUES('{nome_servico}', '{descricao_servico}')")
@@ -19,7 +21,7 @@ class InserirServico(InterfaceServicoRepository):
         connection.commit()
 
         # fechando conexão com banco.
-        fechar_conexao_db(cursor=cursor, connection=connection)
+        fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
         return 'Serviço Inserido com sucesso'
 
@@ -27,9 +29,11 @@ class InserirServico(InterfaceServicoRepository):
     def listar_servico(self):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
-        cursor = connection.cursor()
+        # criando um cursor
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         cursor.execute(f"SELECT * FROM servico;")
 
@@ -38,16 +42,18 @@ class InserirServico(InterfaceServicoRepository):
         response = cursor.fetchall()
 
         # fechando conexão com banco.
-        fechar_conexao_db(cursor=cursor, connection=connection)
+        fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
         return response
 
     def encontrar_servico_por_id(self, id_servico):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
-        cursor = connection.cursor()
+        # criando um cursor
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         try:
             cursor.execute(f"SELECT * FROM servico WHERE id_servico = {id_servico};")
@@ -57,7 +63,7 @@ class InserirServico(InterfaceServicoRepository):
             response = cursor.fetchall()
 
             # fechando conexão com banco.
-            fechar_conexao_db(cursor=cursor, connection=connection)
+            fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
             return response
 
@@ -68,16 +74,18 @@ class InserirServico(InterfaceServicoRepository):
     def deletar_servico(self, id_servico):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
-        cursor = connection.cursor()
+        # criando um cursor
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         try:
             cursor.execute(f"DELETE FROM servico WHERE id_servico = {id_servico}")
             connection.commit()
 
             # fechando conexão com banco.
-            fechar_conexao_db(cursor=cursor, connection=connection)
+            fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
             return "sevico deletado com sucesso"
 
@@ -88,9 +96,11 @@ class InserirServico(InterfaceServicoRepository):
     def atualizar_servico(self, id_servico, nome_servico, descricao_servico):
 
         # conectando ao banco
-        connection = conectar_db()
+        conn = conectar_db()
+        connection = conn['connection']
 
-        cursor = connection.cursor()
+        # criando um cursor
+        cursor = connection.cursor(cursor_factory=DictCursor)
 
         try:
             cursor.execute(
@@ -102,7 +112,7 @@ class InserirServico(InterfaceServicoRepository):
             connection.commit()
 
             # fechando conexão com banco.
-            fechar_conexao_db(cursor=cursor, connection=connection)
+            fechar_conexao_db(cursor=cursor, connection=connection, connection_pool=conn['connection_pool'])
 
             return "servico atualizada com sucesso"
 
