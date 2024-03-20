@@ -43,7 +43,7 @@ def test_deletar_horario():
     horario = InserirHorario()
 
     response = horario.deletar_horarios(
-        id_horario=3
+        id_horario=1
     )
     print(response)
 

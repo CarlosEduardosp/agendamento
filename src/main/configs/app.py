@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from .rotas.rota_inicial import inicio
 from .rotas.rota_cliente import select_clientes, insert_cliente, select_by_id, deletar_cliente, update_cliente
 from .rotas.rota_agendamento import insert_agendamento, select_agendamento, select_agendamento_by_id, delete_agendamento
+from .rotas.rota_horario import insert_horario, select_horario, select_horario_by_id, select_by_status, delete_horario
+from .rotas.rota_servico import insert_serviço, select_servico, select_servico_by_id, delete_servico, update_servico
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -21,6 +23,20 @@ app.include_router(insert_agendamento.router, tags=["Realiza a inserção de age
 app.include_router(select_agendamento.router, tags=["Seleciona os agendamentos no banco de dados."])
 app.include_router(select_agendamento_by_id.router, tags=["Seleciona os agendamentos no banco de dados pelo id do cliente."])
 app.include_router(delete_agendamento.router, tags=["Deleta os agendamentos no banco de dados pelo id do agendamento."])
+
+# rotas de horarios
+app.include_router(insert_horario.router, tags=["Inserir horarios no banco de dados."])
+app.include_router(select_horario.router, tags=["Seleciona os horarios no banco de dados."])
+app.include_router(select_horario_by_id.router, tags=["Seleciona os horarios no banco de dados pelo id do horario."])
+app.include_router(select_by_status.router, tags=["Seleciona os horarios no banco de dados pelo status."])
+app.include_router(delete_horario.router, tags=["Deleta os horarios no banco de dados pelo id do horario."])
+
+# rotas de serviço
+app.include_router(insert_serviço.router, tags=["Inserir serviços no banco de dados."])
+app.include_router(select_servico.router, tags=["Seleciona os serviços no banco de dados."])
+app.include_router(select_servico_by_id.router, tags=["Seleciona os serviços no banco de dados pelo id servico."])
+app.include_router(delete_servico.router, tags=["Deleta os serviços no banco de dados pelo id do serviço."])
+app.include_router(update_servico.router, tags=["Realiza a atualização de serviços no banco de dados pelo id_serviço."])
 
 
 # Lista de origens permitidas

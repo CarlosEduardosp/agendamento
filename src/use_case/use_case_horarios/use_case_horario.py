@@ -78,7 +78,7 @@ class HorarioUseCase(InterfacehorariosUseCase):
         try:
             if validade_entry:
 
-                response = self.horario_repository.deletar_horarios()
+                response = self.horario_repository.deletar_horarios(id_horario=id_horario)
 
                 return {'success': True, 'data': response}
             else:

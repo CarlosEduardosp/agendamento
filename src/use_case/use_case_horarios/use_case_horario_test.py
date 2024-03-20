@@ -68,14 +68,14 @@ def test_encontrar_status_use_case():
         print('ocorreu um erro no use case horario.')
 
 
-def test_deletar_agendamento_use_case():
+def test_deletar_horario_use_case():
     repository = InserirHorario()
     horario = HorarioUseCase(repository)
 
     try:
 
         response = horario.deletar_horarios(
-            id_horario=3
+            id_horario=2
         )
 
         print('use case deletar por id_horario ok', response)

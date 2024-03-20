@@ -59,7 +59,7 @@ def test_delete_adapter():
     buscar = AdapterHorario(
         api_route=register_horario_composer(),
         data={
-            'id_horario': 3
+            'id_horario': 1
         }
     )
 
